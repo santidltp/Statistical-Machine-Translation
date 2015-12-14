@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.py[cod]
 
 # C extensions
@@ -33,3 +34,6 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+=======
+SMT/.idea/
+>>>>>>> 91d0efa467f97658c56c0cc886afaaa8c65d8cc0

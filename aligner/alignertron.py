@@ -8,8 +8,6 @@ from output import HTMLOutput
 falg = False
 temp = None
 
-MAX_SIZE = 10000
-
 
 
 

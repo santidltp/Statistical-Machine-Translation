@@ -8,7 +8,6 @@ import math
 from operator import mul
 
 
-
 class HTMLOutput:
 
 
@@ -19,7 +18,7 @@ class HTMLOutput:
         else:
             langList = langList.split(',')
         self.counter = 1
-        self.maxFreq = None
+        self.maximumFrequency = None
         self.outputFile = outputFile
         outputFile.write(
             '''<?xml version="1.0" encoding="%s"?>
@@ -41,6 +40,7 @@ class HTMLOutput:
      inputEncoding, inputEncoding,
      "".join([" <th>%s</th>\n" % l for l in langList])))
 
+
     def write(self, line):
 
         alignment = line.split('\t')
@@ -54,9 +54,9 @@ class HTMLOutput:
         else:
             blue = 128 + 128 * (1 - reduce(mul, lexWeights, 1.) ** (1./len(lexWeights)))
             lexWeights = "&nbsp;".join(["%.2f" % lw for lw in lexWeights])
-        if self.maxFreq is None:
-            self.maxFreq = math.log(freq)
-        red = 255. * (1. - math.log(freq) / self.maxFreq)
+        if self.maximumFrequency is None:
+            self.maximumFrequency = math.log(freq)
+        red = 255. * (1. - math.log(freq) / self.maximumFrequency)
         green = 255 * (1 - reduce(mul, probas, 1.) ** (1./len(probas)))
         self.outputFile.write(
             """<tr>\n <td class="n">%i</td>

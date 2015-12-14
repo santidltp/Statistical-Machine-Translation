@@ -1,14 +1,14 @@
 __author__ = 'alienpunker'
 import sys
 from time import time
-from CommonUtil import open_compressed, parse_field_numbers, message, make_temp_file, set_proba, optimum_array
+from CommonUtil import open_file, parse_field_numbers, getTempFIle, setProbability, best_array
 import math
 import random
 from Distribution import Distribution
 
 
-# from Distribution import Distribution as Distribution
-MAX_SUBCORPUS_SIZE = 100000
+
+maximumSize = 10000
 
 
 
@@ -33,16 +33,16 @@ class Aligner:
         self.counts = {}
         self.nbAlignments = 0   # = sum(len(c) for c in self.counts)
         self.files = []
-        self.weightedAlignmentFile = make_temp_file(".al_lw")
+        self.weightedAlignmentFile = getTempFIle(".al_lw")
         try:
             for f in inputFilenames:
                 if f == "-":
-                    inFile = make_temp_file(".stdin")
+                    inFile = getTempFIle(".stdin")
                     inFile.writelines(sys.stdin)
                     inFile.seek(0)
                     self.files.append(inFile)
                 else:
-                    self.files.append(open_compressed(f))
+                    self.files.append(open_file(f))
             self.offsets = []
             nbLines = None
             self.nbLanguages = 0
@@ -67,10 +67,10 @@ class Aligner:
                 else:
                     assert nbLines == lineId + 1, \
                            "Input files have different number of lines"
-                self.offsets.append(optimum_array(fileOffsets))
+                self.offsets.append(best_array(fileOffsets))
                 del fileOffsets
-            message("Input corpus: %i languages, %i lines\n" %
-                    (self.nbLanguages, nbLines))
+            # message("Input corpus: %i languages, %i lines\n" %
+            #         (self.nbLanguages, nbLines))
 
             if minLanguages is None:
                 self.minLanguages = self.nbLanguages
@@ -88,23 +88,23 @@ class Aligner:
                 nbCorpora = 1
             else:
                 nbCorpora = int(math.ceil(1. * nbLines / maxNbLines))
-                message("Split input corpus into %i subcorpora" % nbCorpora)
+                # message("Split input corpus into %i subcorpora" % nbCorpora)
                 if timeout is not None:
                     timeout /= 1. * nbCorpora
-                    message(" (timeout: %.2fs each)" % timeout)
-                message("\n")
+                    # message(" (timeout: %.2fs each)" % timeout)
+                # message("\n")
             lines = range(nbLines)
             random.shuffle(lines)
             for nbCorpToDo in range(nbCorpora, 0, -1):
-                if nbCorpora > 1:
-                    message("\r%i subcorpora remaining\n" % nbCorpToDo)
+                # if nbCorpora > 1:
+                    # message("\r%i subcorpora remaining\n" % nbCorpToDo)
                 selection = [lines.pop() for _ in
                              range(int(math.ceil(1. * len(lines) /
                                                   nbCorpToDo)))]
                 selection.sort()    # Speed up disk access
                 self.set_corpus(selection)
                 self.run(timeout, nbNewAlignments)
-            set_proba(self.weightedAlignmentFile, self.counts, writer)
+            setProbability(self.weightedAlignmentFile, self.counts, writer)
         finally:
             self.weightedAlignmentFile.close()
             for f in self.files:
@@ -151,7 +151,7 @@ class Aligner:
         sortedByFreq = sorted(range(len(self.allWords)),
                               key=self.wordFreq.__getitem__, reverse=True)
         self.allWords = [self.allWords[i] for i in sortedByFreq]
-        self.wordLanguages = optimum_array([self.wordLanguages[i]
+        self.wordLanguages = best_array([self.wordLanguages[i]
                                             for i in sortedByFreq],
                                            self.nbLanguages)
         newPos = [None] * len(self.allWords)
@@ -161,7 +161,7 @@ class Aligner:
             self.corpus[i] = [newPos[wordId] for wordId in line]
 
         self.wordFreq.sort(reverse=True)
-        self.wordFreq = optimum_array(self.wordFreq)
+        self.wordFreq = best_array(self.wordFreq)
 
 
         ngramRange = range(2, self.indexN + 1)
@@ -228,7 +228,7 @@ class Aligner:
         print >> sys.stderr, "\rAligning... (ctrl-c to interrupt)"
         # Do not compress this temp file ! Some alignments are not actually
         # written with KeyboardInterrupt (may be because of psyco)
-        tmpFile = make_temp_file(".al")
+        tmpFile = getTempFIle(".al")
         try:
             try:
                 while speed > nbNewAlignments:
@@ -245,15 +245,15 @@ class Aligner:
                                   (nbSubcorporaDone,
                                    1. * subcorporaDoneSum / nbSubcorporaDone,
                                    self.nbAlignments, speed)
-                        message("\r%s%s" % (toWrite," " * (previousWriteLen -
-                                                           len(toWrite))))
+                        # message("\r%s%s" % (toWrite," " * (previousWriteLen -
+                        #                                    len(toWrite))))
                         previousWriteLen = len(toWrite)
                         previousNbAl = self.nbAlignments
                         lastWriteTime = t
 
 
                     subcorpusSize = nextRandomSize()
-                    while subcorpusSize > MAX_SUBCORPUS_SIZE:
+                    while subcorpusSize > maximumSize:
                         subcorpusSize = nextRandomSize()
                     if subcorpusSize == 2:
                         nb2 += 1

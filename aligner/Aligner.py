@@ -1,53 +1,17 @@
 __author__ = 'alienpunker'
-import os
 import sys
-import optparse
 from time import time
-
-import bz2
-import gzip
-from xml.sax.saxutils import escape
-from tempfile import NamedTemporaryFile
-from alignertron import open_compressed, parse_field_numbers, message, make_temp_file, set_proba, optimum_array
+from array import array
+from CommonUtil import open_compressed, parse_field_numbers, message, make_temp_file, set_proba, optimum_array
 import math
 import random
-from array import array
-from operator import mul
-from bisect import bisect_left
-from output import PlainWriter, MosesWriter, HTMLWriter
+from Distribution import Distribution
+
+
 # from Distribution import Distribution as Distribution
 MAX_SUBCORPUS_SIZE = 100000
 
 
-class Distribution:
-
-    def __init__(self, function, start, end):
-
-        values = [function(x) for x in range(start, end + 1)]
-        fact = 1. / sum(values)
-        s = 0.
-        for i, v in enumerate(values):
-            s += fact * v
-            values[i] = s
-        self.values = array('f', values)
-        self.start = start
-        self.nbVal = end + 1 - start
-
-    def next(self):
-        """Return new random integer, according to distribution."""
-        r = random.random()
-        values = self.values
-        i = -1
-        for i in range(self.nbVal):
-            if r < values[i]:
-                return self.start + i
-        return self.start + i    # We should never reach this line
-
-
-
-###############################################################################
-# Alignment mode
-###############################################################################
 
 class Aligner:
 

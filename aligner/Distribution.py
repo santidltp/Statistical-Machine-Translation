@@ -1,5 +1,5 @@
 __author__ = 'alienpunker'
-import array as array
+from array import array
 import random
 
 class Distribution:

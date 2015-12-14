@@ -8,45 +8,8 @@ import math
 from operator import mul
 
 
-###############################################################################
-# Output formatters
-###############################################################################
 
-class PlainWriter:
-
-
-    def __init__(self, outputFile):
-
-        self.outputFile = outputFile
-
-    def write(self, line):
-
-        self.outputFile.write(line)
-
-    def terminate(self):
-
-        self.outputFile.flush()
-
-
-class MosesWriter(PlainWriter):
-
-    def write(self, line):
-
-        alignment, lexWeights, probas, _ = line.rsplit('\t', 3)
-        # Remove lexical weights if necessary
-        try:
-            for f in lexWeights.split():
-                float(f)
-        except ValueError:
-            lexWeights = ""
-        else:
-            lexWeights = " " + lexWeights
-        self.outputFile.write("%s |||%s %s 2.718\n" %
-                              (alignment.replace('\t', ' ||| '),
-                               lexWeights, probas))
-
-
-class HTMLWriter:
+class HTMLOutput:
 
 
     def __init__(self, outputFile, inputEncoding, langList):
@@ -58,20 +21,23 @@ class HTMLWriter:
         self.counter = 1
         self.maxFreq = None
         self.outputFile = outputFile
-        outputFile.write('''<?xml version="1.0" encoding="%s"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">\n<head>
-<meta http-equiv="content-type" content="text/html; charset=%s" />
-<title>alignerTron.py: output</title>
-<style type="text/css">
- td { border: solid thin rgb(224,224,224); padding: 5px; text-align: center }
- td.n { font-family: monospace; text-align: right }
- th { background-color: rgb(240, 240, 240); border: thin outset }
-</style>\n</head>
-<body>\n<table cellspacing="0pt">
-<tr>\n <th>No</th>\n <th>Freq.</th>\n <th>Translation<br/>probabilities</th>
- <th>Lexical<br/>weights</th>\n%s</tr>\n''' % (
+        outputFile.write(
+            '''<?xml version="1.0" encoding="%s"?>
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">\n<head>
+                <meta http-equiv="content-type" content="text/html; charset=%s" />
+
+
+                <title>alignerTron.py: output</title>
+                <style type="text/css">
+                td { border: solid thin rgb(224,224,224); padding: 5px; text-align: center }
+                td.n { font-family: monospace; text-align: right }
+                th { background-color: rgb(240, 240, 240); border: thin outset }
+                </style>\n</head>
+                <body>\n<table cellspacing="0pt">
+                <tr>\n <th>No</th>\n <th>Freq.</th>\n <th>Translation<br/>probabilities</th>
+                <th>Lexical<br/>weights</th>\n%s</tr>\n''' % (
      inputEncoding, inputEncoding,
      "".join([" <th>%s</th>\n" % l for l in langList])))
 

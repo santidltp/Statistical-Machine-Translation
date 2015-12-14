@@ -8,7 +8,7 @@ import bz2
 import gzip
 from xml.sax.saxutils import escape
 from tempfile import NamedTemporaryFile
-from anymalign import open_compressed, parse_field_numbers, message, make_temp_file, set_proba, optimum_array
+from alignertron import open_compressed, parse_field_numbers, message, make_temp_file, set_proba, optimum_array
 import math
 import random
 from array import array
@@ -23,7 +23,7 @@ class Distribution:
 
     def __init__(self, function, start, end):
 
-        values = [function(x) for x in xrange(start, end + 1)]
+        values = [function(x) for x in range(start, end + 1)]
         fact = 1. / sum(values)
         s = 0.
         for i, v in enumerate(values):
@@ -38,7 +38,7 @@ class Distribution:
         r = random.random()
         values = self.values
         i = -1
-        for i in xrange(self.nbVal):
+        for i in range(self.nbVal):
             if r < values[i]:
                 return self.start + i
         return self.start + i    # We should never reach this line
@@ -116,7 +116,7 @@ class Aligner:
 
             ncf = parse_field_numbers(discontiguousFields, self.nbLanguages)
             self.contiguousFields = [(i + 1 not in ncf)
-                                     for i in xrange(self.nbLanguages)]
+                                     for i in range(self.nbLanguages)]
 
             if timeout < 0:
                 timeout = None
@@ -132,11 +132,11 @@ class Aligner:
                 message("\n")
             lines = range(nbLines)
             random.shuffle(lines)
-            for nbCorpToDo in xrange(nbCorpora, 0, -1):
+            for nbCorpToDo in range(nbCorpora, 0, -1):
                 if nbCorpora > 1:
                     message("\r%i subcorpora remaining\n" % nbCorpToDo)
                 selection = [lines.pop() for _ in
-                             xrange(int(math.ceil(1. * len(lines) /
+                             range(int(math.ceil(1. * len(lines) /
                                                   nbCorpToDo)))]
                 selection.sort()    # Speed up disk access
                 self.set_corpus(selection)
@@ -153,7 +153,7 @@ class Aligner:
 
         self.corpus = [[] for _ in lines]
         self.allWords, self.wordLanguages = [], []
-        allWordIds = [{} for _ in xrange(self.nbLanguages)]
+        allWordIds = [{} for _ in range(self.nbLanguages)]
         nbLanguagesDone = 0
         # Read files sequentially, rather than in parallel (faster)
         for f, fileOffsets in zip(self.files, self.offsets):
@@ -185,7 +185,7 @@ class Aligner:
         self.wordFreq.append(max(self.wordFreq) + 1)
 
         # Reassign word ids: smallest id for most frequent word
-        sortedByFreq = sorted(xrange(len(self.allWords)),
+        sortedByFreq = sorted(range(len(self.allWords)),
                               key=self.wordFreq.__getitem__, reverse=True)
         self.allWords = [self.allWords[i] for i in sortedByFreq]
         self.wordLanguages = optimum_array([self.wordLanguages[i]
@@ -216,11 +216,11 @@ class Aligner:
             for s in sentences:
                 s = tuple(s)
                 lastIdx = len(s) + 1
-                for n in xrange(2, min(self.indexN+1, lastIdx)):
+                for n in range(2, min(self.indexN+1, lastIdx)):
                     ngramIds = allNgramIds[n-2]
                     ngrams = self.allNgrams[n-2]
                     ngramSentence = ngramSentences[n-2]
-                    for i in xrange(lastIdx - n):
+                    for i in range(lastIdx - n):
                         ngram = s[i:i+n]
                         ngramId = ngramIds.get(ngram)
                         if ngramId is None:
@@ -297,7 +297,7 @@ class Aligner:
 
                     nbSubcorporaDone += 1
                     subcorporaDoneSum += subcorpusSize
-                    self.align(random.sample(xrange(nbLines), subcorpusSize),
+                    self.align(random.sample(range(nbLines), subcorpusSize),
                                tmpFile)
             except KeyboardInterrupt:
                 toWrite = "(%i subcorpora, avg=%.2f) Alignment interrupted! " \
@@ -322,7 +322,7 @@ class Aligner:
                 if weight1:
                     frac1, weight1 = math.modf(weight1)
                     weight1 = int(weight1)
-                    for i in xrange(nbLines):
+                    for i in range(nbLines):
                         w = weight1
                         if random.random() < frac1:
                             w += 1
@@ -334,7 +334,7 @@ class Aligner:
                     if random.random() < fracN:
                         w += 1
                     if w:
-                        self.align(xrange(nbLines), tmpFile, w)
+                        self.align(range(nbLines), tmpFile, w)
 
             tmpFile.seek(0)
             self.weightFunc(tmpFile)
@@ -352,7 +352,7 @@ class Aligner:
         vec_word = {}   # {tuple(int): set(int)}
         vw_setdefault = vec_word.setdefault
 
-        for n in xrange(1, self.indexN + 1):
+        for n in range(1, self.indexN + 1):
 
 
             if n == 1:

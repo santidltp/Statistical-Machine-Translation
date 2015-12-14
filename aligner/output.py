@@ -2,7 +2,6 @@ __author__ = 'alienpunker'
 
 
 from xml.sax.saxutils import escape
-from tempfile import NamedTemporaryFile
 
 import math
 
@@ -64,7 +63,7 @@ class HTMLWriter:
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">\n<head>
 <meta http-equiv="content-type" content="text/html; charset=%s" />
-<title>anymalign.py: output</title>
+<title>alignerTron.py: output</title>
 <style type="text/css">
  td { border: solid thin rgb(224,224,224); padding: 5px; text-align: center }
  td.n { font-family: monospace; text-align: right }

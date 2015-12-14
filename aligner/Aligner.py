@@ -1,7 +1,6 @@
 __author__ = 'alienpunker'
 import sys
 from time import time
-from array import array
 from CommonUtil import open_compressed, parse_field_numbers, message, make_temp_file, set_proba, optimum_array
 import math
 import random

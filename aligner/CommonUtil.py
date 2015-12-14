@@ -1,32 +1,20 @@
 __author__ = 'alienpunker'
 
 
-
-import os
 import sys
-import optparse
-from time import time
-import Aligner
-
 import bz2
 import gzip
-from xml.sax.saxutils import escape
 from tempfile import NamedTemporaryFile
 
-import math
-import random
 from array import array
-from operator import mul
-from bisect import bisect_left
-from output import  HTMLOutput
 
 
 
 __version__ = '2.5 (May 4th 2011)'
 __author__ = 'Adrien Lardilleux <Adrien.Lardilleux@limsi.fr>'
 __scriptName__ = 'anymalign'
-__verbose__ = False
-__tmpDir__ = None
+falg = False
+temp = None
 
 def parse_field_numbers(fields, maxFields):
 
@@ -58,7 +46,7 @@ def parse_field_numbers(fields, maxFields):
 
 def make_temp_file(suf=''):
 
-    return NamedTemporaryFile(dir=__tmpDir__, prefix=__scriptName__,
+    return NamedTemporaryFile(dir=temp, prefix=__scriptName__,
                               suffix=suf)
 
 def open_compressed(filename):
@@ -73,7 +61,7 @@ def open_compressed(filename):
 
 def message(msg, out=sys.stderr):
 
-    if __verbose__:
+    if falg:
         out.write(str(msg))
 
 def optimum_array(initialList, maxi=None):

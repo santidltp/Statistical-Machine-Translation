@@ -22,8 +22,8 @@ def main():
     writer = HTMLOutput(sys.stdout, 'utf-8', None)
 
 
-    from Aligner import Aligner
-    Aligner(args, writer, -1,0, -1,
+    from WordAligner import WordAligner
+    WordAligner(args, writer, -1,0, -1,
             False, '', None, 1,
             7, '', 1)
 

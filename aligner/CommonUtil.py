@@ -13,18 +13,18 @@ falg = False
 temp = None
 name = ""
 
-def parse_field_numbers(fields, maxFields):
+def changeFields(fields, maxFields):
     selection = set()
-    for f in fields.split(','):
-        if not f:
+    for field in fields.split(','):
+        if not field:
             continue
-        start_end = f.split('-')
-        if len(start_end) > 2:
+        starter = field.split('-')
+        if len(starter) > 2:
             raise ValueError
-        elif len(start_end) == 1 and start_end[0]:
-            selection.add(int(start_end[0]))
+        elif len(starter) == 1 and starter[0]:
+            selection.add(int(starter[0]))
         else:
-            start, end = start_end
+            start, end = starter
             if start:
                 start = int(start)
             else:
@@ -41,12 +41,12 @@ def parse_field_numbers(fields, maxFields):
 def getTempFIle(suf=''):
     return NamedTemporaryFile(dir=temp, prefix=name, suffix=suf)
 
-def open_file(filename):
+def openFile(filename):
     return open(filename, 'rb')
 
 
 
-def best_array(list, maxi=None):
+def getBestArray(list, maxi=None):
 
     if maxi is None:
         maxi = max(list)

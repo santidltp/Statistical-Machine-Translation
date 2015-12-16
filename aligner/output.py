@@ -24,7 +24,8 @@ class HTMLOutput:
             '''<?xml version="1.0" encoding="%s"?>
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-                <html xmlns="http://www.w3.org/1999/xhtml">\n<head>
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                \n<head>
                 <meta http-equiv="content-type" content="text/html; charset=%s" />
 
 
@@ -35,7 +36,7 @@ class HTMLOutput:
                 th { background-color: rgb(240, 240, 240); border: thin outset }
                 </style>\n</head>
                 <body>\n<table cellspacing="0pt">
-                <tr>\n <th>No</th>\n <th>Freq.</th>\n <th>Translation<br/>probabilities</th>
+                <tr>\n <th>No</th>\n <th>Frequency.</th>\n <th>Translation<br/>probabilities</th>
                 <th>Lexical<br/>weights</th>\n%s</tr>\n''' % (
      inputEncoding, inputEncoding,
      "".join([" <th>%s</th>\n" % l for l in langList])))

@@ -1,18 +1,16 @@
 # -*- coding:utf-8 -*-
 
 __author__ = 'santiago'
-
+import sys
 class tokenizer:
 
 
     def tokenizer(self, file1):
         try:
             english_input = open(file1, 'r').read()
-            # foreing_input = open(file2,'r').read()
-            # print(english_input)
 
         except:
-            print("The files does not exist!")
+            return("The files does not exist!")
 
 
         newString = english_input
@@ -36,4 +34,9 @@ class tokenizer:
 
 if __name__ == '__main__':
     n = tokenizer()
-    print n.tokenizer("news-commentary-v8.cs-en.en")
+    try:
+        args =sys.argv[1:][0] # one file per time
+        print args
+        print n.tokenizer(args)
+    except Exception as e:
+        print e

@@ -325,7 +325,7 @@ class WordAligner:
 
 if __name__ == '__main__':
 
-    args =sys.argv[1:]
+        args =sys.argv[1:]
     falg, temp = not False, None
     from WordAligner import WordAligner
     WordAligner(args)

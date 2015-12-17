@@ -1,10 +1,8 @@
 __author__ = 'alienpunker'
 
 
-import sys
 import gzip
 from tempfile import NamedTemporaryFile
-
 from array import array
 
 
@@ -35,8 +33,6 @@ def changeFields(fields, maxFields):
                 end = maxFields
             selection.update(xrange(start, end + 1))
     return selection
-
-
 
 def getTempFIle(suf=''):
     return NamedTemporaryFile(dir=temp, prefix=name, suffix=suf)
@@ -99,7 +95,7 @@ def setProbability(inputFile, inputDict, writer):
                 phraseFreq = [{} for _ in xrange(numberoflanguages)]
             alignment = line.split('\t', numberpartitions)
             freq = int(alignment.pop(), 16)
-            alignment.pop() # Remove lexical weights
+            alignment.pop()
             for phrase, counts in zip(alignment, phraseFreq):
                 phraseHash = hash(phrase)
                 counts[phraseHash] = counts.get(phraseHash, 0) + freq
@@ -110,15 +106,15 @@ def setProbability(inputFile, inputDict, writer):
         numberpartitions = numberoflanguages
         try:
             for line in reserved:
-                alignmentStr, lexWeights, freq = line.rsplit('\t', 2)
-                alignment = alignmentStr.split('\t', numberpartitions)
+                alignstr, lexWeights, freq = line.rsplit('\t', 2)
+                alignment = alignstr.split('\t', numberpartitions)
                 freq = int(freq, 16)
                 probas = ' '.join(["%f" % (1. * freq / counts[hash(phrase)])
                                    for phrase, counts
                                    in zip(alignment, phraseFreq)])
-                writer.write("%s\t%s\t%s\t%i\n" % (alignmentStr, lexWeights,
+                writer.writer("%s\t%s\t%s\t%i\n" % (alignstr, lexWeights,
                                                    probas, freq))
-            writer.terminate()
+            writer.closer()
         except IOError:
             pass
     finally:

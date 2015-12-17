@@ -5,8 +5,7 @@ from CommonUtil import openFile, changeFields, getTempFIle, setProbability, getB
 import math
 import random
 from output import HTMLOutput
-from Distribution import Distribution
-from collections import Counter
+from balance import balance
 
 maximumSize = 10000
 
@@ -14,7 +13,7 @@ class WordAligner:
     def __init__(self, inputFilenames):
 
         self.maxNbLines =0
-        self.time = 1
+        self.time = 10
         self.archivos = inputFilenames
         self.numNewAligns = -1
         self.discontiguousFields =''
@@ -157,9 +156,9 @@ class WordAligner:
 
         numLines = len(self.corpus)
         if numLines > 2:
-            nextRandomSize = Distribution(self.principal, 2, numLines - 1).next
+            nextRandomSize = balance(self.principal, 2, numLines - 1).next
         else:
-            nextRandomSize = Distribution(self.principal, 1,numLines).next
+            nextRandomSize = balance(self.principal, 1,numLines).next
 
         nssecnd = 0
         nsubach = 0
@@ -169,7 +168,7 @@ class WordAligner:
         lstwrt = startTime = time()
         speed = sys.maxint
 
-        print >> sys.stderr, "\rAligning, please wait..."
+        print >> sys.stderr, "\rWorking, please wait..."
         tmpFile = getTempFIle(".al")
 
         try:
@@ -199,7 +198,6 @@ class WordAligner:
             except KeyboardInterrupt:
                 pass
 
-
             if numLines > 2:
                 wnum1 = 2 * nssecnd * math.log(1 - 2. / (numLines + 1)) / (numLines * math.log(1 - 1. / (numLines + 1)))
                 wnum2 = 2 * nssecnd * math.log(1 - 2. / (numLines + 1)) / (numLines * math.log(1 -  1. * numLines / (numLines + 1)))
@@ -225,6 +223,13 @@ class WordAligner:
         finally:
             tmpFile.close()
             print >> sys.stderr, "\rDone, please check your output file."
+
+    def _weights(self, inputFile):
+
+        del self.corpus
+        diffe = self.numLang - 1
+        for line in inputFile:
+            print >> self.AlignedFile, "%s\t-" % '\t'.join([' '.join([self.words[int(pra, 16)] for pra in frse.split()]) for frse in line.split('\t', diffe)])
 
 
     def alignwords(self, lineIds, outputFile, weight=1):
@@ -318,12 +323,9 @@ class WordAligner:
                             valde[vendedor] = cursor + weight
 
 
-    def _weights(self, inputFile):
+if __name__ == '__main__':
 
-        del self.corpus
-        diffe = self.numLang - 1
-        for line in inputFile:
-            print >> self.AlignedFile, "%s\t-" % '\t'.join([' '.join([self.words[int(pra, 16)] for pra in frse.split()]) for frse in line.split('\t', diffe)])
-
-
-
+    args =sys.argv[1:]
+    falg, temp = not False, None
+    from WordAligner import WordAligner
+    WordAligner(args)

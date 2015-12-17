@@ -112,7 +112,7 @@ def setProbability(inputFile, inputDict, writer):
                 probas = ' '.join(["%f" % (1. * freq / counts[hash(phrase)])
                                    for phrase, counts
                                    in zip(alignment, phraseFreq)])
-                writer.writer("%s\t%s\t%s\t%i\n" % (alignstr, lexWeights,
+                writer.write("%s\t%s\t%s\t%i\n" % (alignstr, lexWeights,
                                                    probas, freq))
             writer.closer()
         except IOError:

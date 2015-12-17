@@ -40,7 +40,7 @@ class HTMLOutput:
      "".join([" <th>%s</th>\n" % l for l in langList])))
 
 
-    def writer(self, line):
+    def write(self, line):
         algn = line.split('\t')
         freq = int(algn.pop())
         probastas = [float(p) for p in algn.pop().split()]
@@ -56,7 +56,7 @@ class HTMLOutput:
             self.mxFreq = math.log(freq)
         red = 255. * (1. - math.log(freq) / self.mxFreq)
         green = 255 * (1 - reduce(mul, probastas, 1.) ** (1./len(probastas)))
-        self.outFile.writer(
+        self.outFile.write(
             """<tr>\n <td class="n">%i</td>
  <td class="n" style="background-color:rgb(255,%i,%i)">%i</td>
  <td class="n" style="background-color:rgb(%i,255,%i)">%s</td>
@@ -69,7 +69,7 @@ class HTMLOutput:
         self.counter += 1
 
     def closer(self):
-        self.outFile.writer("</table>\n</body>\n</html>\n")
+        self.outFile.write("</table>\n</body>\n</html>\n")
         self.outFile.flush()
 
 

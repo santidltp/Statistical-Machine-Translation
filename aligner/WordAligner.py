@@ -13,7 +13,7 @@ class WordAligner:
     def __init__(self, inputFilenames):
 
         self.maxNbLines =0
-        self.time = 10
+        self.time = 100
         self.archivos = inputFilenames
         self.numNewAligns = -1
         self.discontiguousFields =''

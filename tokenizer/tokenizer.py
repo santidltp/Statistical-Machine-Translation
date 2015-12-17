@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 __author__ = 'santiago'
 
 class tokenizer:
@@ -12,38 +14,26 @@ class tokenizer:
         except:
             print("The files does not exist!")
 
-        my_string = "This is nothing but a pure test. I mean, (just a test)."
-        lines = english_input.split('\n')
-        words = [x.split(" ") for x in lines ]
 
-        # words = lines.split(" ")
-        newString = ""
-        pstPunct = [',','.','!',')','%','\'',"\"",':',';',']','?']
-        prePunct = ['¡','(','#','\'','\"','[','¿','@','$']
-        for line in lines:
-            ex = line.split(" ")
-            for word in ex:
+        newString = english_input
+        punctuation = [',','.','!',')','%','\'',"\"",':',';',']'
+            ,'?','¡','(','#','[','¿','@','$','\xe2\x80\x99',
+                       '-','_']
+        for punct in punctuation:
 
-                if any(x in word for x in pstPunct):
-                    if ')' in word and '.' in word or ']' in word and '.' in word:
-                        newString += word[:-2] + " " + word[len(word)-2:len(word)-1] + " " + word[len(word)-1:]
-
-                    else:
-                        newString += word[:-1] + " " + word[len(word)-1:] + " "
-
-                elif any(x in word for x in prePunct):
-                    newString += word[0] + " " + word[1:] + " "
-                else:
-                    newString += word + " "
-                # if '\n' in word:
-            newString+='\n'
+            if punct in english_input:
+               newString = newString.replace(punct, " "+punct+" ")
 
 
-        return self.truecasing(newString)
+        with open(file1+'_tk.txt', 'w') as f:
+            f.write(self.truecasing(newString))
+            f.close()
 
+        # return self.truecasing(newString)
+        return "Document tokenized!"
     def truecasing(self, str):
         return str.lower()
 
 if __name__ == '__main__':
     n = tokenizer()
-    print(n.tokenizer("en.txt"))
+    print n.tokenizer("news-commentary-v8.cs-en.en")
